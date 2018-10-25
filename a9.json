@@ -1,0 +1,122 @@
+[
+  {
+    "Country": "Arab Emirates",
+    "id":"784",
+    "Year": 2016,
+    "PercentRural": 14.196
+  },
+  {
+    "Country": "Argentina",
+    "id":"032",
+    "Year": 2016,
+    "PercentRural": 8.107
+  },
+  {
+    "Country": "Australia",
+    "id":"036",
+    "Year": 2016,
+    "PercentRural": 10.446
+  },
+  {
+    "Country": "Brazil",
+    "id":"076",
+    "Year": 2016,
+    "PercentRural": 14.067
+  },
+  {
+    "Country": "Canada",
+    "id":"124",
+    "Year": 2016,
+    "PercentRural": 17.994
+  },
+  {
+    "Country": "China",
+    "id":"156",
+    "Year": 2016,
+    "PercentRural": 43.222
+  },
+  {
+    "Country": "Germany",
+    "id":"276",
+    "Year": 2016,
+    "PercentRural": 24.49
+  },
+  {
+    "Country": "Spain",
+    "id":"724",
+    "Year": 2016,
+    "PercentRural": 20.198
+  },
+  {
+    "Country": "France",
+    "id":"250",
+    "Year": 2016,
+    "PercentRural": 20.25
+  },
+  {
+    "Country": "United Kingdom",
+    "id":"826",
+    "Year": 2016,
+    "PercentRural": 17.165
+  },
+  {
+    "Country": "India",
+    "id":"356",
+    "Year": 2016,
+    "PercentRural": 66.864
+  },
+  {
+    "Country": "Italy",
+    "id":"380",
+    "Year": 2016,
+    "PercentRural": 30.884
+  },
+  {
+    "Country": "Japan",
+    "id":"392",
+    "Year": 2016,
+    "PercentRural": 6.072
+  },
+  {
+    "Country": "Korea",
+    "id":"410",
+    "Year": 2016,
+    "PercentRural": 17.408
+  },
+  {
+    "Country": "Mexico",
+    "id":"484",
+    "Year": 2016,
+    "PercentRural": 20.483
+  },
+  {
+    "Country": "Russian",
+    "id":"643",
+    "Year": 2016,
+    "PercentRural": 25.899
+  },
+  {
+    "Country": "Sweden",
+    "id":"752",
+    "Year": 2016,
+    "PercentRural": 14.036
+  },
+  {
+    "Country": "Turkey",
+    "id":"792",
+    "Year": 2016,
+    "PercentRural": 26.113
+  },
+  {
+    "Country": "United States",
+    "id":"840",
+    "Year": 2016,
+    "PercentRural": 18.212
+  },
+  {
+    "Country": "South Africa",
+    "id":"710",
+    "Year": 2016,
+    "PercentRural": 34.705
+  }
+]

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<title>You Zhang INF554 HW9</title>
+<h1>You Zhang Assignment 9</h1>
+<h3>In this assignment, I will use the data of the percentage of rural population out of total in 20 different countries.s. To
+    show you the data, I will create a proportional symbol map and a choropleth map. For the symbol map, the larger the cirles are, the higher percent of rural population they have. 
+    For the choropleth map, deeper pink color means higher percent of rural population. Enjoy! Data source:
+    <a href="http://data.worldbank.org">http://data.worldbank.org</a> Map Source: <a href="https://github.com/topojson/topojson">Topojson</a>
+</h3>
+<style type="text/css">
+    body {
+        font-family: "Gill Sans", sans-serif;
+        font-size: 16px;
+        line-height: 26px;
+        color: #2e2e2e;
+        font-weight: 300;
+        letter-spacing: .05em;
+    }
+
+    .symbol {
+        fill: #ff007f;
+        fill-opacity: 0.7;
+        stroke: white;
+    }
+
+    .label {
+        font-size: 10px;
+        text-anchor: end;
+    }
+
+    .cell {
+        fill: #ff007f;
+        fill-opacity: 0.7;
+    }
+
+    path:hover {
+        fill-opacity: 0.5;
+    }
+</style>
+
+<body>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        var padding = { top: 50, right: 100, bottom: 50, left: 100 }
+            , width = 1000
+            , height = 600;
+
+        //symbol map    
+        var svg = d3.select("body").append("svg")
+            .attr('width', width + padding.left + padding.right)
+            .attr('height', height + padding.top + padding.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + padding.left + ', ' + padding.top + ')');
+
+        var projection = d3.geoMercator()
+            .scale(120)
+            .translate([width / 2, height / 1.5]);
+
+        var path = d3.geoPath().projection(projection);
+
+        var radius = d3.scaleSqrt()
+            .domain([8, 87])
+            .range([5, 50]);
+
+        d3.queue()
+            .defer(d3.json, 'a9.json')
+            .defer(d3.json, 'https://unpkg.com/world-atlas@1.1.4/world/110m.json')
+            .await(drawSymbol);
+
+
+        function drawSymbol(error, statistics, map) {
+
+            data = {}
+            statistics
+                .forEach(function (d) { data[d.id] = { "percent": d['PercentRural'], "name": d['Country'] } });
+            countries = topojson.feature(map, map.objects.countries);
+            clist = []
+            countries.features.forEach(function (d) {
+
+
+                if (data[d.id]) {
+                    d.rural = data[d.id].percent;
+                    d.name = data[d.id].name;
+                    clist.push(d);
+                }
+            });
+
+
+            svg.append("g")
+                .attr("class", "countries")
+                .selectAll("path")
+                .data(countries.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("id", function (d) { return d.id })
+                .style('fill', '#CEB6D4')
+                .style('stroke', 'white')
+                .style('stroke-width', 1.5)
+                .style("opacity", 0.8);
+       
+
+            svg.append("g")
+                .attr("class", "symbol")
+                .selectAll("circle")
+                .data(clist)
+                .style('fill', '#CEB6D4')
+                .enter().append("circle")
+                .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+                .attr("r", function (d) { return radius(d.rural) });
+
+            svg.append("g")
+                .attr("class", "label")
+                .selectAll("text")
+                .data(clist)
+                .style('fill', '#CEB6D4')
+                .enter().append("text")
+                .attr("font-size", "10px")
+                .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+                .text(function (d) { return d.name });
+
+            // legend
+            svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", "translate(20, 40)");
+
+            var legendSize = d3.legendSize()
+                .scale(radius)
+                .shape('circle')
+                .shapePadding(15)
+                .labelOffset(20)
+                .title('Percent of Rural Population (%)')
+                .orient('vertical');
+
+            svg.select(".legend")
+                .call(legendSize);
+
+            // title
+            svg.append("text")
+                .attr("x", (width / 2))
+                .attr("y", 0 - (padding.top / 2))
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .attr("font-weight", "bold")
+                .text("Proportional Symbol View: % of Rural Population");
+
+        }
+
+
+        var svg2 = d3.select("body").append("svg")
+            .attr('width', width + padding.left + padding.right)
+            .attr('height', height + padding.top + padding.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + padding.left + ', ' + padding.top + ')');
+
+
+        d3.queue()
+            .defer(d3.json, 'a9.json')
+            .defer(d3.json, 'https://unpkg.com/world-atlas@1.1.4/world/110m.json')
+            .await(drawChoropleth);
+        function drawChoropleth(error, statistics, map) {
+
+            data = {}
+            statistics
+                .forEach(function (d) { data[d.id] = { "percent": +d['PercentRural'], "country": d.Country } });
+            countries = topojson.feature(map, map.objects.countries);
+            clist = []
+            countries.features.forEach(function (d) {
+
+
+                if (data[d.id]) {
+                    d.percent = data[d.id].percent;
+                    d.country = data[d.id].country;
+                    clist.push(d);
+                }
+            });
+
+            var color = d3.scaleLinear()
+                .domain([8, 67])
+                .range(["rgb(255, 204, 229)", "rgb(255, 0, 127)"]);
+
+
+
+            svg2.append("g")
+                .attr("class", "countries")
+                .selectAll("path")
+                .data(countries.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("id", function (d) { return d.id })
+                .style('fill', function (d) {
+                    if (d.percent) return color(d.percent);
+                    else return "#CEB6D4"
+                })
+                .style('stroke', 'white')
+                .style('stroke-width', 1.5)
+                .style("opacity", 0.8);
+
+
+            svg2.append("g")
+                .attr("class", "label")
+                .selectAll("text")
+                .data(clist)
+                .enter().append("text")
+                .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+                .text(function (d) { return d.country });
+
+            //set the legend
+            svg2.append("g")
+                .attr("class", "legend")
+                .attr("transform", "translate(20,20)");
+
+            var legendLinear = d3.legendColor()
+                .shapeWidth(30)
+                .orient('horizontal')
+                .scale(color)
+                .title("Percent of Rural Population (%)")
+                ;
+
+            svg2.select(".legend")
+                .call(legendLinear);
+
+
+            // title
+            svg2.append("text")
+                .attr("x", (width / 2))
+                .attr("y", 0 - (padding.top / 2))
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .attr("font-weight", "bold")
+                .text("Choropleth View: % of Rural Population");
+
+        }
+    </script>
+
+
+
+    <script id="__bs_script__">
+        //<![CDATA[
+        document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.18.13'><\/script>".replace("HOST", location.hostname));
+            //]]>
+    </script>
+
+
+</body>
+
+</html>
